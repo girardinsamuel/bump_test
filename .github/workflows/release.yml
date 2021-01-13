@@ -15,6 +15,14 @@ jobs:
         uses: actions/setup-python@v2
         with:
           python-version: "3.8"
+      - name: Dump GitHub context
+        env:
+          GITHUB_CONTEXT: ${{ toJson(github) }}
+        run: echo "$GITHUB_CONTEXT"
+      - name: test
+        env:
+          REPO: ${{ format('{{https://{0}:{1}@github.com/bump_test.git}}', github.repository_owner, github.token) }}
+        run: echo "$REPO"
       - name: install deps
         run: pip install -r requirements.txt
       - name: Autobump version
@@ -28,6 +36,6 @@ jobs:
           # from refs/tags/v1.2.3 get 1.2.3
           VERSION=$(echo $GITHUB_REF | sed 's#.*/v##')
           # here last arg is mandatory but not used (cf https://github.com/c4urself/bump2version/issues/22)
-          bump2version --new-version $VERSION patch
+          bump2version --new-version --verbose $VERSION patch
           # push
           git push "https://girardinsamuel:$GITHUB_TOKEN@github.com/bump_test.git" HEAD:master

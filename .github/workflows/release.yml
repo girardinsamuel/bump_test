@@ -35,7 +35,7 @@ jobs:
         shell: bash
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          REPO: ${{ format('{{https://{0}:{1}@github.com/bump_test.git}}', github.actor, github.token) }}
+          REPO: ${{ format('https://{0}:{1}@github.com/{2}.git', github.actor, github.token, github.event.repository.name) }}
           # REPO: https://${GITHUB_ACTOR}:${INPUT_GITHUB_TOKEN}@github.com/${REPOSITORY}.git
         run: |
           git config --local user.email "action@github.com"

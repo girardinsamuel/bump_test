@@ -1,6 +1,6 @@
 # Demo of GitHub release to bump commit
 
-Based on https://github.com/peritus/bumpversion package, this repo shows how to configure a GitHub workflow to auto-bump code upon release creation.
+Based on https://github.com/c4urself/bump2version/ package, this repo shows how to configure a GitHub workflow to auto-bump code upon release creation.
 
 1. Create (manually) a release in GitHub e.g. `v1.0.1`
 

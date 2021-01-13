@@ -9,8 +9,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-        with:
-          token: "${{ secrets.PERSONAL_ACCESS_TOKEN }}"
+        # with:
+          # token: "${{ secrets.PERSONAL_ACCESS_TOKEN }}"
       - name: Set up Python
         uses: actions/setup-python@v2
         with:
@@ -19,10 +19,15 @@ jobs:
         run: pip install -r requirements.txt
       - name: Autobump version
         shell: bash
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # REPO: https://${GITHUB_ACTOR}:${INPUT_GITHUB_TOKEN}@github.com/${REPOSITORY}.git
         run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
           # from refs/tags/v1.2.3 get 1.2.3
           VERSION=$(echo $GITHUB_REF | sed 's#.*/v##')
-          echo $VERSION
           # here last arg is mandatory but not used (cf https://github.com/c4urself/bump2version/issues/22)
           bump2version --new-version $VERSION patch
-          # this should: edit files, commit files
+          # push
+          git push "https://girardinsamuel:$GITHUB_TOKEN@github.com/bump_test.git" HEAD:master

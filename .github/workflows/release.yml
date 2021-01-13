@@ -16,6 +16,15 @@ jobs:
           python-version: "3.8"
       - name: Install bumpversion
         run: pip install -r requirements.txt
+      - name: Parse version
+        id: vars
+        run: echo ::set-output name=version::${$(echo $GITHUB_REF | sed 's#.*/v##')}
+      - name: Check output
+        env:
+          RELEASE_VERSION: ${{ steps.vars.outputs.version }}
+        run: |
+          echo $RELEASE_VERSION
+          echo ${{ steps.vars.outputs.version }}
       - name: Bump version from release
         shell: bash
         env:

@@ -16,14 +16,13 @@ jobs:
           python-version: "3.8"
       - name: Install bumpversion
         run: pip install -r requirements.txt
-      - name: Set env
-        run: echo ::set-env name=RELEASE_VERSION::$(echo $GITHUB_REF | sed 's#.*/v##')
       - name: Bump version from release
         shell: bash
         env:
           # or in bash VERSION=$(echo $GITHUB_REF | sed 's#.*/v##')
           VERSION: ${{ github.event.release.tag_name }}
         run: |
+          RELEASE_VERSION=$(echo ${VERSION:1})
           echo $RELEASE_VERSION
           echo $VERSION
           git config --local user.email "action@github.com"

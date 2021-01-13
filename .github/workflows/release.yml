@@ -16,6 +16,8 @@ jobs:
           python-version: "3.8"
       - name: Install bumpversion
         run: pip install -r requirements.txt
+      - name: Set env
+        run: echo ::set-env name=RELEASE_VERSION::$(echo $GITHUB_REF | sed 's#.*/v##')
       - name: Bump version from release
         shell: bash
         env:
@@ -25,7 +27,7 @@ jobs:
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
           # here last arg is mandatory but not used (cf https://github.com/c4urself/bump2version/issues/22)
-          bump2version --verbose --new-version $VERSION patch
+          bump2version --verbose --new-version $RELEASE_VERSION patch
       # this won't trigger an other workflow because github token is used and not personal_access_token
       - name: Push changes
         uses: ad-m/github-push-action@master

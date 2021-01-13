@@ -1,0 +1,25 @@
+name: Release
+
+on:
+  release:
+    types: [created]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: "3.8"
+      - name: install deps
+        run: pip install -r requirements.txt
+      - name: Autobump version
+        shell: bash
+        run: |
+          # from refs/tags/v1.2.3 get 1.2.3
+          VERSION=$(echo $GITHUB_REF | sed 's#.*/v##')
+          # here last arg is mandatory but not used (cf https://github.com/c4urself/bump2version/issues/22)
+          bump2version --dry-run --verbose --new-version VERSION patch
+          # this should: edit files, commit files

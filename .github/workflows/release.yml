@@ -20,6 +20,7 @@ jobs:
         run: |
           # from refs/tags/v1.2.3 get 1.2.3
           VERSION=$(echo $GITHUB_REF | sed 's#.*/v##')
+          echo $VERSION
           # here last arg is mandatory but not used (cf https://github.com/c4urself/bump2version/issues/22)
-          bump2version --dry-run --verbose --new-version VERSION patch
+          bump2version --dry-run --verbose --new-version $VERSION patch
           # this should: edit files, commit files

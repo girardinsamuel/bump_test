@@ -21,23 +21,19 @@ jobs:
         run: echo "$GITHUB_CONTEXT"
       - name: test
         env:
-          REPOSITORY: ${{ github.event.repository.name}}
-          ACTOR: ${{ github.actor }}
-          REPO: ${{ format('{{https://{0}:{1}@github.com/bump_test.git}}', github.repository_owner, github.token) }}
+          REPO: ${{ format('https://{0}:{1}@github.com/{2}.git', github.actor, 4, github.event.repository.name) }}
         run: |
-          echo https://${{ github.repository_owner }}:${{ 33 }}@github.com/${{ github.event.repository.name }}
-          echo $REPOSITORY
-          echo $ACTOR
-          echo $GITHUB_ACTOR
+          echo $REPO
       - name: install deps
         run: pip install -r requirements.txt
       - name: Autobump version
         shell: bash
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          REPO: ${{ format('https://{0}:{1}@github.com/{2}.git', github.actor, github.token, github.event.repository.name) }}
+          REPO: ${{ format('https://{0}:{1}@github.com/{2}.git', github.actor, 4, github.event.repository.name) }}
           # REPO: https://${GITHUB_ACTOR}:${INPUT_GITHUB_TOKEN}@github.com/${REPOSITORY}.git
         run: |
+          echo $REPO
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
           # from refs/tags/v1.2.3 get 1.2.3

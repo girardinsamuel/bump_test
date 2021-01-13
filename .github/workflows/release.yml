@@ -30,7 +30,7 @@ jobs:
         shell: bash
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          REPO: ${{ format('https://{0}:{1}@github.com/{2}.git', github.actor, 4, github.event.repository.name) }}
+          REPO: ${{ format('https://{0}:{1}@github.com/{2}.git', github.actor, github.token, github.event.repository.name) }}
           # REPO: https://${GITHUB_ACTOR}:${INPUT_GITHUB_TOKEN}@github.com/${REPOSITORY}.git
         run: |
           echo $REPO
@@ -42,5 +42,5 @@ jobs:
           # bump2version --verbose --new-version $VERSION patch
           bump2version --verbose --new-version 0.3.8 patch
           # push
-          git push $REPO HEAD:master
+          git push $REPO HEAD:main
           # git push https://${{ github.repository_owner }}:${{ github.token }}@github.com/${{ github.event.repository.name }} HEAD:master

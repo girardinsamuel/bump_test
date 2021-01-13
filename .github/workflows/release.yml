@@ -21,14 +21,21 @@ jobs:
         run: echo "$GITHUB_CONTEXT"
       - name: test
         env:
+          REPOSITORY: ${{ github.event.repository.name}}
+          ACTOR: ${{ github.actor }}
           REPO: ${{ format('{{https://{0}:{1}@github.com/bump_test.git}}', github.repository_owner, github.token) }}
-        run: echo https://${{ github.repository_owner }}:${{ 33 }}@github.com/${{ github.event.repository.name }}
+        run: |
+          echo https://${{ github.repository_owner }}:${{ 33 }}@github.com/${{ github.event.repository.name }}
+          echo $REPOSITORY
+          echo $ACTOR
+          echo $GITHUB_ACTOR
       - name: install deps
         run: pip install -r requirements.txt
       - name: Autobump version
         shell: bash
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO: ${{ format('{{https://{0}:{1}@github.com/bump_test.git}}', github.actor, github.token) }}
           # REPO: https://${GITHUB_ACTOR}:${INPUT_GITHUB_TOKEN}@github.com/${REPOSITORY}.git
         run: |
           git config --local user.email "action@github.com"
@@ -38,4 +45,5 @@ jobs:
           # here last arg is mandatory but not used (cf https://github.com/c4urself/bump2version/issues/22)
           bump2version --verbose --new-version $VERSION patch
           # push
-          git push https://${{ github.repository_owner }}:${{ github.token }}@github.com/${{ github.event.repository.name }} HEAD:master
+          git push $REPO HEAD:master
+          # git push https://${{ github.repository_owner }}:${{ github.token }}@github.com/${{ github.event.repository.name }} HEAD:master

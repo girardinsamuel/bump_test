@@ -19,7 +19,7 @@ jobs:
         run: pip install -r requirements.txt
       - name: Autobump version
         shell: bash
-        with:
+        env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           # REPO: https://${GITHUB_ACTOR}:${INPUT_GITHUB_TOKEN}@github.com/${REPOSITORY}.git
         run: |

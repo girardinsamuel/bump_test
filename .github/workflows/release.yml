@@ -1,8 +1,12 @@
 name: Release
 
 on:
-  release:
-    types: [created]
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'New version (vA.B.C)'
+        required: true
+        default: ''
 
 jobs:
   deploy:
@@ -19,16 +23,13 @@ jobs:
       - name: Bump version from release
         shell: bash
         env:
-          # or in bash VERSION=$(echo $GITHUB_REF | sed 's#.*/v##')
-          VERSION: ${{ github.event.release.tag_name }}
+          VERSION: ${{ github.event.inputs.version }}
         run: |
-          RELEASE_VERSION=$(echo ${VERSION:1})
-          echo $RELEASE_VERSION
-          echo $VERSION
+          VERSION_NUMBER=$(echo ${VERSION:1})
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
           # here last arg is mandatory but not used (cf https://github.com/c4urself/bump2version/issues/22)
-          bump2version --verbose --new-version $RELEASE_VERSION patch
+          bump2version --verbose --new-version $VERSION_NUMBER patch
       # this won't trigger an other workflow because github token is used and not personal_access_token
       - name: Push changes
         uses: ad-m/github-push-action@master
@@ -36,3 +37,18 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           branch: ${{ github.event.release.target_commitish }}  # name of release target branch
       # here we could continue and publish to pypi
+      # and then we can create the release
+      - name: Create GitHub Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
+        with:
+          tag_name: ${{ github.event.inputs.version }}
+          release_name: ${{ github.event.inputs.version }}
+          body: |
+            Changes in this Release
+            - First Change
+            - Second Change
+          draft: false
+          prerelease: false

@@ -35,7 +35,7 @@ jobs:
         uses: ad-m/github-push-action@master
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          branch: ${{ github.event.release.target_commitish }}  # name of release target branch
+          branch: ${{ github.ref }}  # name of branch choosed in workflow dispatch
       # here we could continue and publish to pypi
       # and then we can create the release
       - name: Create GitHub Release
